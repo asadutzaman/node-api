@@ -74,10 +74,20 @@ mongoose
 // app.use('/api/users', userRoutes); // All user-related routes
 
 // Error handler middleware (optional)
+// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send('Something went wrong!');
+
+    const statusCode = err.status || 500;
+    const message = err.message || 'Internal Server Error';
+
+    res.status(statusCode).json({
+        success: false,
+        message,
+        data: null,
+    });
 });
+
 
 app.get('/', (req, res) => {
     res.send('Server is running');
